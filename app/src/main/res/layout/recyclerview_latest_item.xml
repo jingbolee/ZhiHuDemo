@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/cardview_margin"
-    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
     card:cardBackgroundColor="@color/smokeGray"
     card:cardCornerRadius="5dp"
     card:cardElevation="5dp"
@@ -23,16 +24,16 @@
         android:layout_height="80dp"
         android:src="@drawable/medic"
         />
-      <TextView
-          android:paddingLeft="10dp"
-          android:id="@+id/latest_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:ellipsize="end"
-          android:maxLines="3"
-          android:textColor="@android:color/black"
-          android:textSize="19sp"
-          android:text="读读日报 24 小时热门 TOP 5 · 「这是国家交给我们的任务」，造神水当网红"
-          />
+    <TextView
+        android:id="@+id/latest_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingLeft="10dp"
+        android:text="读读日报 24 小时热门 TOP 5 · 「这是国家交给我们的任务」，造神水当网红"
+        android:textColor="@android:color/black"
+        android:textSize="19sp"
+        />
   </LinearLayout>
 </android.support.v7.widget.CardView>
