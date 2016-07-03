@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import cc.lijingbo.zhihudemo.ZhiHuApp;
 import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
 import cc.lijingbo.zhihudemo.global.Global;
@@ -53,12 +52,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
       }
 
       @Override public void onFailure(Call<LatestNewsBean> call, Throwable t) {
-        Snackbar.make(mView,"网络异常",Snackbar.LENGTH_LONG).setAction("将会加载本地数据",
-            new View.OnClickListener() {
-              @Override public void onClick(View v) {
-                iMainActivity.hideProgressDialog();
-              }
-            }).show();
+        Snackbar.make(mView,"网络异常",Snackbar.LENGTH_SHORT).show();
         iMainActivity.hideProgressDialog();
         getZhiHFromCache();
         Log.e("Demo", t.getMessage());

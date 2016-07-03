@@ -21,9 +21,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
     implements IMainActivity, SwipeRefreshLayout.OnRefreshListener {
 
-  @BindView(R.id.recyclerview) RecyclerView recyclerView;
-  @BindView(R.id.swiperefreshlayout) SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.recyclerview) RecyclerView mRecyclerView;
+  @BindView(R.id.swiperefreshlayout) SwipeRefreshLayout mSwipeRefreshLayout;
+  @BindView(R.id.toolbar) Toolbar mToolbar;
   private Unbinder mBind;
   private IZhiHPresenter iZhiHPresenter;
   private List<LatestNewsBean.StoryBean> storiesList = new ArrayList<>();
@@ -32,26 +32,26 @@ public class MainActivity extends AppCompatActivity
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    setSupportActionBar(toolbar);
+    setSupportActionBar(mToolbar);
     mBind = ButterKnife.bind(this);
     initData();
     initView();
   }
 
   private void initData() {
-    iZhiHPresenter = new ZhiHPresenter(this, recyclerView);
+    iZhiHPresenter = new ZhiHPresenter(this, mRecyclerView);
   }
 
   private void initView() {
-    swipeRefreshLayout.setOnRefreshListener(this);
-    swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+    mSwipeRefreshLayout.setOnRefreshListener(this);
+    mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
         android.R.color.holo_green_light, android.R.color.holo_orange_light,
         android.R.color.holo_red_light);
     mAdapter = new ZhiHLatestAdapter(this, storiesList);
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    recyclerView.setAdapter(mAdapter);
+    mRecyclerView.setHasFixedSize(true);
+    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    mRecyclerView.setAdapter(mAdapter);
     onRefresh();
     //iZhiHPresenter.getZhiHLatest();
   }
@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity
   }
 
   @Override public void updateAppBarTitle(String name) {
-    toolbar.setTitle(name);
+    mToolbar.setTitle(name);
   }
 
   @Override public void showProgressDialog() {
-    if (!swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(true);
+    if (!mSwipeRefreshLayout.isRefreshing()) mSwipeRefreshLayout.setRefreshing(true);
   }
 
   @Override public void updateListData(List<LatestNewsBean.StoryBean> stories) {
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity
   }
 
   @Override public void hideProgressDialog() {
-    if (swipeRefreshLayout.isRefreshing()) {
-      swipeRefreshLayout.setRefreshing(false);
+    if (mSwipeRefreshLayout.isRefreshing()) {
+      mSwipeRefreshLayout.setRefreshing(false);
     }
   }
 
