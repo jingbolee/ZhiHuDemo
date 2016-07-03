@@ -1,8 +1,11 @@
 package cc.lijingbo.zhihudemo.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class LatestNewsBean {
+public class LatestNewsBean implements Parcelable {
 
   private int date;
   private List<StoryBean> stories;
@@ -61,4 +64,33 @@ public class LatestNewsBean {
       this.multipic = multipic;
     }
   }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.date);
+    dest.writeList(this.stories);
+  }
+
+  public LatestNewsBean() {
+  }
+
+  protected LatestNewsBean(Parcel in) {
+    this.date = in.readInt();
+    this.stories = new ArrayList<StoryBean>();
+    in.readList(this.stories, StoryBean.class.getClassLoader());
+  }
+
+  public static final Parcelable.Creator<LatestNewsBean> CREATOR =
+      new Parcelable.Creator<LatestNewsBean>() {
+        @Override public LatestNewsBean createFromParcel(Parcel source) {
+          return new LatestNewsBean(source);
+        }
+
+        @Override public LatestNewsBean[] newArray(int size) {
+          return new LatestNewsBean[size];
+        }
+      };
 }

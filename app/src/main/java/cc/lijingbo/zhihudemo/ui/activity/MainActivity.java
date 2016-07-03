@@ -7,8 +7,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -20,9 +18,9 @@ import cc.lijingbo.zhihudemo.ui.adapter.ZhiHLatestAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity,SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity
+    implements IMainActivity, SwipeRefreshLayout.OnRefreshListener {
 
-  @BindView(R.id.progressbar) ProgressBar progressBar;
   @BindView(R.id.recyclerview) RecyclerView recyclerView;
   @BindView(R.id.swiperefreshlayout) SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.toolbar) Toolbar toolbar;
@@ -41,16 +39,21 @@ public class MainActivity extends AppCompatActivity implements IMainActivity,Swi
   }
 
   private void initData() {
-    iZhiHPresenter = new ZhiHPresenter(this, this);
+    iZhiHPresenter = new ZhiHPresenter(this, recyclerView);
   }
 
   private void initView() {
+    swipeRefreshLayout.setOnRefreshListener(this);
+    swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        android.R.color.holo_green_light, android.R.color.holo_orange_light,
+        android.R.color.holo_red_light);
     mAdapter = new ZhiHLatestAdapter(this, storiesList);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setAdapter(mAdapter);
-    iZhiHPresenter.getZhiHLatest();
+    onRefresh();
+    //iZhiHPresenter.getZhiHLatest();
   }
 
   @Override protected void onDestroy() {
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity,Swi
   }
 
   @Override public void showProgressDialog() {
-    progressBar.setVisibility(View.VISIBLE);
+    if (!swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(true);
   }
 
   @Override public void updateListData(List<LatestNewsBean.StoryBean> stories) {
@@ -73,10 +76,12 @@ public class MainActivity extends AppCompatActivity implements IMainActivity,Swi
   }
 
   @Override public void hideProgressDialog() {
-    progressBar.setVisibility(View.INVISIBLE);
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
+    }
   }
 
   @Override public void onRefresh() {
-
+    iZhiHPresenter.getZhiHLatest();
   }
 }
