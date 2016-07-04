@@ -29,7 +29,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
     this.iMainActivity = iMainActivity;
     mView = view;
     request = new ZhiHRequest();
-    mContext= ZhiHuApp.getInstance();
+    mContext = ZhiHuApp.getInstance();
   }
 
   @Override public void getZhiHLatest() {
@@ -40,7 +40,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
       public void onResponse(Call<LatestNewsBean> call, Response<LatestNewsBean> response) {
         if (response.isSuccessful()) {
           LatestNewsBean body = response.body();
-          Snackbar.make(mView,"刷新成功",Snackbar.LENGTH_SHORT).show();
+          Snackbar.make(mView, "刷新成功", Snackbar.LENGTH_SHORT).show();
           SharedPreferences sharedPreferences =
               mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
           sharedPreferences.edit().putString(Global.LATEST_JSON, new Gson().toJson(body)).commit();
@@ -53,7 +53,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
       }
 
       @Override public void onFailure(Call<LatestNewsBean> call, Throwable t) {
-        Snackbar.make(mView,"网络异常",Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mView, "网络异常", Snackbar.LENGTH_SHORT).show();
         iMainActivity.hideProgressDialog();
         getZhiHFromCache();
         Log.e("Demo", t.getMessage());
@@ -78,15 +78,25 @@ public class ZhiHPresenter implements IZhiHPresenter {
     Call<ThemesBean> themes = request.getZhiHNews().getThemes("themes");
     themes.enqueue(new Callback<ThemesBean>() {
       @Override public void onResponse(Call<ThemesBean> call, Response<ThemesBean> response) {
-        if (response.isSuccessful()){
+        if (response.isSuccessful()) {
           ThemesBean body = response.body();
+          SharedPreferences sharedPreferences =
+              mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
+          sharedPreferences.edit().putString(Global.THEMES, new Gson().toJson(body)).commit();
           List<ThemesBean.Theme> others = body.getOthers();
           iMainActivity.updateThemesData(others);
         }
       }
 
       @Override public void onFailure(Call<ThemesBean> call, Throwable t) {
-
+        SharedPreferences sharedPreferences =
+            mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
+        String body = sharedPreferences.getString(Global.THEMES, null);
+        if (null != body) {
+          ThemesBean themesBean = new Gson().fromJson(body, ThemesBean.class);
+          List<ThemesBean.Theme> others = themesBean.getOthers();
+          iMainActivity.updateThemesData(others);
+        }
       }
     });
   }

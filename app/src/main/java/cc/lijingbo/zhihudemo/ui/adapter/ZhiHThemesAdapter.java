@@ -20,11 +20,11 @@ public class ZhiHThemesAdapter extends BaseAdapter {
   }
 
   @Override public int getCount() {
-    return mList.size();
+    return mList.size() == 0 ? 0 : mList.size() + 1;
   }
 
-  @Override public Object getItem(int position) {
-    return mList.get(position);
+  @Override public ThemesBean.Theme getItem(int position) {
+    return mList.get(position - 1);
   }
 
   @Override public long getItemId(int position) {
@@ -32,11 +32,15 @@ public class ZhiHThemesAdapter extends BaseAdapter {
   }
 
   @Override public View getView(int position, View convertView, ViewGroup parent) {
-    ThemesBean.Theme theme = mList.get(position);
-    View view =
-        LayoutInflater.from(mContext).inflate(R.layout.nav_menu_list_item, parent, false);
-    TextView textNavMenuListItem = (TextView) view;
-    textNavMenuListItem.setText(theme.getName());
+    View view;
+    if (position == 0) {
+      view = LayoutInflater.from(mContext).inflate(R.layout.nav_menu_list_home, parent, false);
+    } else {
+      ThemesBean.Theme theme = this.getItem(position);
+      view = LayoutInflater.from(mContext).inflate(R.layout.nav_menu_list_item, parent, false);
+      TextView textNavMenuListItem = (TextView) view;
+      textNavMenuListItem.setText(theme.getName());
+    }
     return view;
   }
 }

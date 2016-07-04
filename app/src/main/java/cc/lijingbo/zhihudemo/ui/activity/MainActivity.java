@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null, false);
     mNavListView.addHeaderView(view);
     mNavListView.setAdapter(mNavListAdapter);
+    //mNavListView.setSelection(0);
+    mNavListView.setItemChecked(0,true);
     onRefresh();
 
     ActionBarDrawerToggle toggle =
