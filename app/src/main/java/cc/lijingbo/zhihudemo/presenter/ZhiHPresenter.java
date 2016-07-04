@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import cc.lijingbo.zhihudemo.ZhiHuApp;
 import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
+import cc.lijingbo.zhihudemo.bean.ThemesBean;
 import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.model.IZhiHRequest;
 import cc.lijingbo.zhihudemo.model.ZhiHRequest;
@@ -71,5 +72,22 @@ public class ZhiHPresenter implements IZhiHPresenter {
       List<LatestNewsBean.StoryBean> stories = bean.getStories();
       iMainActivity.updateListData(stories);
     }
+  }
+
+  @Override public void getThemes() {
+    Call<ThemesBean> themes = request.getZhiHNews().getThemes("themes");
+    themes.enqueue(new Callback<ThemesBean>() {
+      @Override public void onResponse(Call<ThemesBean> call, Response<ThemesBean> response) {
+        if (response.isSuccessful()){
+          ThemesBean body = response.body();
+          List<ThemesBean.Theme> others = body.getOthers();
+          iMainActivity.updateThemesData(others);
+        }
+      }
+
+      @Override public void onFailure(Call<ThemesBean> call, Throwable t) {
+
+      }
+    });
   }
 }
