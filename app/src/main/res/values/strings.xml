@@ -5,4 +5,5 @@
   <string name="nav_head_text">生活的美好，需要你用心去发现，用眼去摄录。</string>
   <string name="nav_list_item_text">日常心理学</string>
   <string name="nav_menu_list_home_text">首页</string>
+  <string name="text_recyclerview_date">今日热闻</string>
 </resources>

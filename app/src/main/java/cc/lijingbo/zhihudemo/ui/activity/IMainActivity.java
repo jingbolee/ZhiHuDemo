@@ -12,7 +12,7 @@ public interface IMainActivity {
 
   void hideProgressDialog();
 
-  void updateListData(List<LatestNewsBean.StoryBean> stories);
+  void updateListData(List<LatestNewsBean.StoryBean> stories,List<LatestNewsBean.TopStoryBean> topStories);
 
   void updateThemesData(List<ThemesBean.Theme> list);
 }

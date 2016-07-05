@@ -45,9 +45,11 @@ public class ZhiHPresenter implements IZhiHPresenter {
               mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
           sharedPreferences.edit().putString(Global.LATEST_JSON, new Gson().toJson(body)).commit();
           int date = body.getDate();
+          sharedPreferences.edit().putInt(Global.UPDATE_TIME, date).commit();
           iMainActivity.updateAppBarTitle("日期：" + date);
           List<LatestNewsBean.StoryBean> stories = body.getStories();
-          iMainActivity.updateListData(stories);
+          List<LatestNewsBean.TopStoryBean> topStories = body.getTop_stories();
+          iMainActivity.updateListData(stories,topStories);
           iMainActivity.hideProgressDialog();
         }
       }
@@ -70,7 +72,8 @@ public class ZhiHPresenter implements IZhiHPresenter {
       int date = bean.getDate();
       iMainActivity.updateAppBarTitle("日期：" + date);
       List<LatestNewsBean.StoryBean> stories = bean.getStories();
-      iMainActivity.updateListData(stories);
+      List<LatestNewsBean.TopStoryBean> topStories = bean.getTop_stories();
+      iMainActivity.updateListData(stories,topStories);
     }
   }
 

@@ -1,5 +1,6 @@
 package cc.lijingbo.zhihudemo.ui.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -20,10 +21,12 @@ import butterknife.Unbinder;
 import cc.lijingbo.zhihudemo.R;
 import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
+import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.presenter.IZhiHPresenter;
 import cc.lijingbo.zhihudemo.presenter.ZhiHPresenter;
 import cc.lijingbo.zhihudemo.ui.adapter.ZhiHLatestAdapter;
 import cc.lijingbo.zhihudemo.ui.adapter.ZhiHThemesAdapter;
+import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity
   private Unbinder mBind;
   private IZhiHPresenter iZhiHPresenter;
   private List<LatestNewsBean.StoryBean> storiesList = new ArrayList<>();
+  private List<LatestNewsBean.TopStoryBean> topStoriesList = new ArrayList<>();
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
@@ -55,6 +59,11 @@ public class MainActivity extends AppCompatActivity
 
   private void initData() {
     iZhiHPresenter = new ZhiHPresenter(this, mRecyclerView);
+    int[] devicePx = DensityUtil.getDevicePx(this);
+    SharedPreferences.Editor edit = getSharedPreferences(Global.SHAREP_NAME, MODE_PRIVATE).edit();
+    edit.putInt(Global.DEVICE_WIDTH, devicePx[0]);
+    edit.putInt(Global.DEVICE_HEIGTH, devicePx[1]);
+    edit.commit();
   }
 
   private void initView() {
@@ -62,19 +71,16 @@ public class MainActivity extends AppCompatActivity
     mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
         android.R.color.holo_green_light, android.R.color.holo_orange_light,
         android.R.color.holo_red_light);
-    mAdapter = new ZhiHLatestAdapter(this, storiesList);
+    mAdapter = new ZhiHLatestAdapter(this, topStoriesList, storiesList);
     mRecyclerView.setHasFixedSize(true);
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mRecyclerView.setAdapter(mAdapter);
 
-    //ListView mNavMenuListView= (ListView) mNavView.findViewById(R.id.nav_menu_list_view);
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);
     View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null, false);
     mNavListView.addHeaderView(view);
     mNavListView.setAdapter(mNavListAdapter);
-    //mNavListView.setSelection(0);
-    mNavListView.setItemChecked(0,true);
     onRefresh();
 
     ActionBarDrawerToggle toggle =
@@ -97,9 +103,12 @@ public class MainActivity extends AppCompatActivity
     if (!mSwipeRefreshLayout.isRefreshing()) mSwipeRefreshLayout.setRefreshing(true);
   }
 
-  @Override public void updateListData(List<LatestNewsBean.StoryBean> stories) {
+  @Override public void updateListData(List<LatestNewsBean.StoryBean> stories,
+      List<LatestNewsBean.TopStoryBean> topStories) {
     storiesList.clear();
+    topStoriesList.clear();
     storiesList.addAll(stories);
+    topStoriesList.addAll(topStories);
     mAdapter.notifyDataSetChanged();
   }
 

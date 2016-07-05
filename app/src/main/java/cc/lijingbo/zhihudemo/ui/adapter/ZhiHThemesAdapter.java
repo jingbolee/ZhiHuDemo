@@ -38,7 +38,7 @@ public class ZhiHThemesAdapter extends BaseAdapter {
     } else {
       ThemesBean.Theme theme = this.getItem(position);
       view = LayoutInflater.from(mContext).inflate(R.layout.nav_menu_list_item, parent, false);
-      TextView textNavMenuListItem = (TextView) view;
+      TextView textNavMenuListItem = (TextView) view.findViewById(R.id.text_nav_list_item);
       textNavMenuListItem.setText(theme.getName());
     }
     return view;
