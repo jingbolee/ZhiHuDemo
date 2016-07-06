@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
+  private int mCurrentPoint = 0;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

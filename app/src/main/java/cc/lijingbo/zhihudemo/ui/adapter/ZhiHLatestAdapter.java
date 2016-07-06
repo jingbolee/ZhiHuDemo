@@ -54,7 +54,8 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
     if (holder instanceof ItemViewHolder) {
       ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-      LatestNewsBean.StoryBean storyBean = storyBeanList.get(position - 1);
+      LatestNewsBean.StoryBean storyBean =
+          storyBeanList.get(position - 2);
       if (null != storyBean.getImages()) {
         Picasso.with(mContext)
             .load(storyBean.getImages()[0])
@@ -88,6 +89,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             mCurrentPoint = position;
           }
+
           @Override public void onPageScrollStateChanged(int state) {
 
           }
@@ -105,7 +107,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   @Override public int getItemCount() {
-    return storyBeanList.size() == 0 ? 0 : storyBeanList.size() + 1;
+    return storyBeanList.size() == 0 ? 0 : storyBeanList.size() + 2;
   }
 
   @Override public int getItemViewType(int position) {
