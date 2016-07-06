@@ -19,7 +19,6 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
   Context mContext;
   int deviceWidth;
   int imageHeigth;
-  int[] images = { R.drawable.img04, R.drawable.img05, R.drawable.img06, R.drawable.img07 };
 
   public TopStoriesPagerAdapter(Context context,
       List<LatestNewsBean.TopStoryBean> topStoryBeanList) {

@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.lijingbo.zhihudemo.R;
 import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
 import cc.lijingbo.zhihudemo.global.Global;
+import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   Context mContext;
   List<LatestNewsBean.StoryBean> storyBeanList;
   List<LatestNewsBean.TopStoryBean> topStoryBeanList;
+  int mCurrentPoint = 0;
 
   public ZhiHLatestAdapter(Context context, List<LatestNewsBean.TopStoryBean> topStoryList,
       List<LatestNewsBean.StoryBean> storyList) {
@@ -48,7 +51,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     return null;
   }
 
-  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
     if (holder instanceof ItemViewHolder) {
       ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
       LatestNewsBean.StoryBean storyBean = storyBeanList.get(position - 1);
@@ -61,11 +64,34 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       itemViewHolder.latestTitle.setText(storyBean.getTitle());
     }
     if (holder instanceof HeaderViewHolder) {
-      HeaderViewHolder headerViewHoler = (HeaderViewHolder) holder;
+      final HeaderViewHolder headerViewHoler = (HeaderViewHolder) holder;
       if (topStoryBeanList.size() > 0) {
         TopStoriesPagerAdapter pagerAdapter =
             new TopStoriesPagerAdapter(mContext, topStoryBeanList);
         headerViewHoler.banner.setAdapter(pagerAdapter);
+        headerViewHoler.banner.setCurrentItem(mCurrentPoint);
+        headerViewHoler.banner.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+          @Override
+          public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+          }
+
+          @Override public void onPageSelected(int position) {
+            headerViewHoler.textBanner.setText(topStoryBeanList.get(position).getTitle());
+            for (int i = 0; i < headerViewHoler.bannerPointContainer.getChildCount(); i++) {
+              View view = headerViewHoler.bannerPointContainer.getChildAt(i);
+              if (i == position) {
+                view.setEnabled(true);
+              } else {
+                view.setEnabled(false);
+              }
+            }
+            mCurrentPoint = position;
+          }
+          @Override public void onPageScrollStateChanged(int state) {
+
+          }
+        });
       }
     }
     if (holder instanceof DateViewHolder) {
@@ -104,10 +130,30 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
   class HeaderViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.banner_viewpager) ViewPager banner;
+    @BindView(R.id.text_banner) TextView textBanner;
+    @BindView(R.id.banner_point_container) LinearLayout bannerPointContainer;
 
     public HeaderViewHolder(View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
+      int leftMarginSize = DensityUtil.dip2px(mContext, 3);
+      int pointSize = DensityUtil.dip2px(mContext, 5);
+      //添加banner小圆点
+      for (int i = 0; i < topStoryBeanList.size(); i++) {
+        View view = new View(mContext);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pointSize, pointSize);
+        if (i > 0) {
+          params.leftMargin = leftMarginSize;
+        }
+        if (i == 0) {
+          view.setEnabled(true);
+        } else {
+          view.setEnabled(false);
+        }
+        view.setLayoutParams(params);
+        view.setBackgroundResource(R.drawable.selector_point);
+        bannerPointContainer.addView(view);
+      }
     }
   }
 
