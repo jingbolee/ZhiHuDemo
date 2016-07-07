@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
+  private int mClickPosition = 0;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mRecyclerView.setAdapter(mAdapter);
     mAdapter.setOnItemClickListener(new ZhiHLatestAdapter.OnItemClickListener() {
-      @Override public void itemClick(View v, int id) {
+      @Override public void itemClick(View v, int id, int position) {
+        mClickPosition = position;
         Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
@@ -123,6 +125,7 @@ public class MainActivity extends AppCompatActivity
     mThemesList.clear();
     mThemesList.addAll(list);
     mNavListAdapter.notifyDataSetChanged();
+    mRecyclerView.scrollToPosition(mClickPosition);
   }
 
   @Override public void hideProgressDialog() {

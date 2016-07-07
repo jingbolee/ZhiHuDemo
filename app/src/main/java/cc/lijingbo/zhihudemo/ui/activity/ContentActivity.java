@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -46,7 +47,11 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     if (null != actionBar) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
-
+    mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        finish();
+      }
+    });
   }
 
   @Override protected void onDestroy() {

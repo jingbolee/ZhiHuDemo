@@ -63,7 +63,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           if (mListener != null) {
-            mListener.itemClick(v,storyBean.getId());
+            mListener.itemClick(v,storyBean.getId(),position - 2);
           }
         }
       });
@@ -82,6 +82,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new TopStoriesPagerAdapter(mContext, topStoryBeanList);
         headerViewHoler.banner.setAdapter(pagerAdapter);
         headerViewHoler.banner.setCurrentItem(mCurrentPoint);
+        headerViewHoler.textBanner.setText(topStoryBeanList.get(mCurrentPoint).getTitle());
         headerViewHoler.banner.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
           @Override
           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -107,7 +108,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
         pagerAdapter.setOnPagerClickListener(new TopStoriesPagerAdapter.OnPagerClickListener() {
           @Override public void onPagerClick(View v, int id) {
-            mListener.itemClick(v,id);
+            mListener.itemClick(v,id,0);
           }
         });
       }
@@ -185,6 +186,6 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   public interface OnItemClickListener {
-    void itemClick(View v,int id);
+    void itemClick(View v,int id,int position);
   }
 }
