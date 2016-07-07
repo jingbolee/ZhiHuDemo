@@ -1,5 +1,7 @@
 package cc.lijingbo.zhihudemo.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -87,14 +89,14 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     settings.setSupportZoom(false);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
     settings.setDefaultTextEncodingName("UTF-8");
-    webview.setWebViewClient(new WebViewClient() {
-
-                               @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                                 return false;
-                               }
-                             }
-
-    );
+    webview.setWebViewClient(new WebViewClient(){
+      @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        startActivity(intent);
+        return true;
+      }
+    });
 
     webview.loadDataWithBaseURL("http://", sanitizedContent, "text/html", "UTF-8", null);
   }
