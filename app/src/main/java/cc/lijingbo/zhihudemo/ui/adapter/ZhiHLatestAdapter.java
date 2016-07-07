@@ -154,8 +154,8 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public HeaderViewHolder(View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
-      int leftMarginSize = DensityUtil.dip2px(mContext, 3);
-      int pointSize = DensityUtil.dip2px(mContext, 5);
+      int leftMarginSize = DensityUtil.dip2px(mContext, 4);
+      int pointSize = DensityUtil.dip2px(mContext, 6);
       //添加banner小圆点
       for (int i = 0; i < topStoryBeanList.size(); i++) {
         View view = new View(mContext);

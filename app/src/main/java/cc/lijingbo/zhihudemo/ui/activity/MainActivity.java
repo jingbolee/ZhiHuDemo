@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
-  private int mCurrentPoint = 0;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,13 +79,11 @@ public class MainActivity extends AppCompatActivity
     mRecyclerView.setAdapter(mAdapter);
     mAdapter.setOnItemClickListener(new ZhiHLatestAdapter.OnItemClickListener() {
       @Override public void itemClick(View v, int id) {
-        Toast.makeText(MainActivity.this, id + "", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
       }
     });
-
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);
     View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null, false);
     mNavListView.addHeaderView(view);

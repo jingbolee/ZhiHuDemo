@@ -37,31 +37,16 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     setContentView(R.layout.activity_content2);
     mBind = ButterKnife.bind(this);
     presenter = new ZhiHContentPresenter(this);
+    int id = getIntent().getIntExtra("id", 0);
+    if (id != 0) {
+      presenter.getZhiHContent(id);
+    }
     setSupportActionBar(mToolbar);
     ActionBar actionBar = getSupportActionBar();
     if (null != actionBar) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    WebSettings settings = webview.getSettings();
-    settings.setJavaScriptEnabled(true);
-    settings.setSupportZoom(false);
-    settings.setJavaScriptCanOpenWindowsAutomatically(true);
-    //settings.setAllowUniversalAccessFromFileURLs(true);
-    settings.setDefaultTextEncodingName("UTF-8");
-    webview.setWebViewClient(new WebViewClient() {
-
-                               @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                                 return false;
-                               }
-                             }
-
-    );
-
-    int id = getIntent().getIntExtra("id", 0);
-    if (id != 0) {
-      presenter.getZhiHContent(id);
-    }
   }
 
   @Override protected void onDestroy() {
@@ -92,6 +77,20 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
       e.printStackTrace();
     }
     String sanitizedContent = HtmlSanitizer.sanitize(content);
+    WebSettings settings = webview.getSettings();
+    settings.setJavaScriptEnabled(true);
+    settings.setSupportZoom(false);
+    settings.setJavaScriptCanOpenWindowsAutomatically(true);
+    settings.setDefaultTextEncodingName("UTF-8");
+    webview.setWebViewClient(new WebViewClient() {
+
+                               @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                 return false;
+                               }
+                             }
+
+    );
+
     webview.loadDataWithBaseURL("http://", sanitizedContent, "text/html", "UTF-8", null);
   }
 }

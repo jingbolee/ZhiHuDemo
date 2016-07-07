@@ -20,38 +20,44 @@
         />
   </android.support.design.widget.AppBarLayout>
 
-      <WebView
-          android:id="@+id/webview"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          app:layout_behavior="@string/appbar_scrolling_view_behavior"
-          ></WebView>
+  <WebView
+      android:id="@+id/webview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      ></WebView>
   <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="210dp"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
-      <ImageView
-          android:id="@+id/content_image"
-          android:layout_width="match_parent"
-          android:layout_height="210dp"
-          android:fitsSystemWindows="true"
-          android:scaleType="centerCrop"
-          app:layout_collapseMode="pin"
-          />
+    <ImageView
+        android:id="@+id/content_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
+        app:layout_collapseMode="pin"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/alphaBlack"
+        >
       <TextView
           android:id="@+id/content_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="bottom"
-          android:maxLines="2"
           android:layout_marginBottom="20dp"
           android:layout_marginLeft="18dp"
           android:layout_marginRight="10dp"
+          android:maxLines="2"
           android:textColor="@android:color/white"
           android:textSize="20sp"
           />
-
     </FrameLayout>
+  </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
