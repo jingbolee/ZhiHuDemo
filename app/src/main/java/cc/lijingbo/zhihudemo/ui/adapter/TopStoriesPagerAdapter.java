@@ -19,6 +19,15 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
   Context mContext;
   int deviceWidth;
   int imageHeigth;
+  OnPagerClickListener mListener;
+
+  public void setOnPagerClickListener(OnPagerClickListener listener) {
+    mListener = listener;
+  }
+
+  public interface OnPagerClickListener {
+    void onPagerClick(View v,int id);
+  }
 
   public TopStoriesPagerAdapter(Context context,
       List<LatestNewsBean.TopStoryBean> topStoryBeanList) {
@@ -39,14 +48,19 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
 
   @Override public Object instantiateItem(ViewGroup container, int position) {
     View view = LayoutInflater.from(mContext).inflate(R.layout.viewpager_item, container, false);
-    LatestNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
+    final LatestNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
     ImageView imageView = (ImageView) view;
     Picasso.with(mContext)
         .load(topStoryBean.getImage())
-        .resize(deviceWidth,imageHeigth)
+        .resize(deviceWidth, imageHeigth)
         .centerCrop()
         .into(imageView);
     container.addView(view);
+    view.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        mListener.onPagerClick(v,topStoryBean.getId());
+      }
+    });
     return view;
   }
 

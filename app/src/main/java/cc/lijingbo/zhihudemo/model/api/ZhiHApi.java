@@ -2,6 +2,7 @@ package cc.lijingbo.zhihudemo.model.api;
 
 import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
+import cc.lijingbo.zhihudemo.bean.ZhiHContentBean;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -20,4 +21,7 @@ public interface ZhiHApi {
 
   //http://news-at.zhihu.com/api/4/themes
   @GET("/api/4/{themes}") Call<ThemesBean> getThemes(@Path("themes") String themes);
+
+  //http://news-at.zhihu.com/api/4/news/3892357
+  @GET("/api/4/news/{id}") Call<ZhiHContentBean> getZhiHContent(@Path("id") int id);
 }

@@ -49,7 +49,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
           iMainActivity.updateAppBarTitle("日期：" + date);
           List<LatestNewsBean.StoryBean> stories = body.getStories();
           List<LatestNewsBean.TopStoryBean> topStories = body.getTop_stories();
-          iMainActivity.updateListData(stories,topStories);
+          iMainActivity.updateListData(stories, topStories);
           iMainActivity.hideProgressDialog();
         }
       }
@@ -73,7 +73,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
       iMainActivity.updateAppBarTitle("日期：" + date);
       List<LatestNewsBean.StoryBean> stories = bean.getStories();
       List<LatestNewsBean.TopStoryBean> topStories = bean.getTop_stories();
-      iMainActivity.updateListData(stories,topStories);
+      iMainActivity.updateListData(stories, topStories);
     }
   }
 
@@ -103,4 +103,5 @@ public class ZhiHPresenter implements IZhiHPresenter {
       }
     });
   }
+
 }

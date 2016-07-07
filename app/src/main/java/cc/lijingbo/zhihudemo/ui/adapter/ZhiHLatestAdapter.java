@@ -27,6 +27,11 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   List<LatestNewsBean.StoryBean> storyBeanList;
   List<LatestNewsBean.TopStoryBean> topStoryBeanList;
   int mCurrentPoint = 0;
+  private OnItemClickListener mListener;
+
+  public void setOnItemClickListener(OnItemClickListener listener) {
+    mListener = listener;
+  }
 
   public ZhiHLatestAdapter(Context context, List<LatestNewsBean.TopStoryBean> topStoryList,
       List<LatestNewsBean.StoryBean> storyList) {
@@ -54,8 +59,14 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
     if (holder instanceof ItemViewHolder) {
       ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-      LatestNewsBean.StoryBean storyBean =
-          storyBeanList.get(position - 2);
+      final LatestNewsBean.StoryBean storyBean = storyBeanList.get(position - 2);
+      itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (mListener != null) {
+            mListener.itemClick(v,storyBean.getId());
+          }
+        }
+      });
       if (null != storyBean.getImages()) {
         Picasso.with(mContext)
             .load(storyBean.getImages()[0])
@@ -92,6 +103,11 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
           @Override public void onPageScrollStateChanged(int state) {
 
+          }
+        });
+        pagerAdapter.setOnPagerClickListener(new TopStoriesPagerAdapter.OnPagerClickListener() {
+          @Override public void onPagerClick(View v, int id) {
+            mListener.itemClick(v,id);
           }
         });
       }
@@ -166,5 +182,9 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       super(itemView);
       ButterKnife.bind(this, itemView);
     }
+  }
+
+  public interface OnItemClickListener {
+    void itemClick(View v,int id);
   }
 }

@@ -1,5 +1,6 @@
 package cc.lijingbo.zhihudemo.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -77,6 +79,14 @@ public class MainActivity extends AppCompatActivity
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mRecyclerView.setAdapter(mAdapter);
+    mAdapter.setOnItemClickListener(new ZhiHLatestAdapter.OnItemClickListener() {
+      @Override public void itemClick(View v, int id) {
+        Toast.makeText(MainActivity.this, id + "", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+      }
+    });
 
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);
     View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null, false);
