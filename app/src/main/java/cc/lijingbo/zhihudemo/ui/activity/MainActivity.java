@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity
     storiesList.addAll(stories);
     topStoriesList.addAll(topStories);
     mAdapter.notifyDataSetChanged();
+    mRecyclerView.scrollToPosition(mClickPosition);
   }
 
   @Override public void updateThemesData(List<ThemesBean.Theme> list) {
     mThemesList.clear();
     mThemesList.addAll(list);
     mNavListAdapter.notifyDataSetChanged();
-    mRecyclerView.scrollToPosition(mClickPosition);
   }
 
   @Override public void hideProgressDialog() {
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity
   @Override public void onRefresh() {
     iZhiHPresenter.getZhiHLatest();
     getSlideThemes();
+    mClickPosition = 0;
   }
 
   public void getSlideThemes() {

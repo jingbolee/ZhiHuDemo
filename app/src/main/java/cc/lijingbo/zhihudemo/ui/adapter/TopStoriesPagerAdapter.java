@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class TopStoriesPagerAdapter extends PagerAdapter {
-  private static final String TAG = "TopStoriesPagerAdapter";
   List<LatestNewsBean.TopStoryBean> topStoriesList;
   Context mContext;
   int deviceWidth;
