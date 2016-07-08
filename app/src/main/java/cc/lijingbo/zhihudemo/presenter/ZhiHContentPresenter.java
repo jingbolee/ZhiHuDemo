@@ -25,12 +25,13 @@ public class ZhiHContentPresenter implements IZhiHContentPresenter {
       public void onResponse(Call<ZhiHContentBean> call, Response<ZhiHContentBean> response) {
         if (response.isSuccessful()) {
           ZhiHContentBean body = response.body();
+          mActivity.showFrameTextBackGround();
           mActivity.showContent(body);
         }
       }
 
       @Override public void onFailure(Call<ZhiHContentBean> call, Throwable t) {
-
+        mActivity.hideFrameTextBackGround();
       }
     });
   }

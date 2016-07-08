@@ -10,6 +10,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -34,11 +35,13 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
   @BindView(R.id.content_image) ImageView contentImage;
   @BindView(R.id.webview) WebView webview;
   @BindView(R.id.content_text) TextView contentText;
+  @BindView(R.id.frame_text_background) FrameLayout frameTextBackGround;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_content2);
     mBind = ButterKnife.bind(this);
+
     presenter = new ZhiHContentPresenter(this);
     int id = getIntent().getIntExtra("id", 0);
     if (id != 0) {
@@ -59,6 +62,18 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
   @Override protected void onDestroy() {
     mBind.unbind();
     super.onDestroy();
+  }
+
+  @Override public void showFrameTextBackGround() {
+    if (View.VISIBLE != frameTextBackGround.getVisibility()) {
+      frameTextBackGround.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void hideFrameTextBackGround() {
+    if (View.INVISIBLE != frameTextBackGround.getVisibility()) {
+      frameTextBackGround.setVisibility(View.INVISIBLE);
+    }
   }
 
   @Override public void showContent(ZhiHContentBean bean) {
@@ -89,10 +104,10 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     settings.setSupportZoom(false);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
     settings.setDefaultTextEncodingName("UTF-8");
-    webview.setWebViewClient(new WebViewClient(){
+    webview.setWebViewClient(new WebViewClient() {
       @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
         Uri uri = Uri.parse(url);
-        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
         return true;
       }

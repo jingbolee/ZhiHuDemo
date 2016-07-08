@@ -40,6 +40,7 @@
         app:layout_collapseMode="pin"
         />
     <FrameLayout
+        android:id="@+id/frame_text_background"
         android:layout_width="match_parent"
         android:layout_height="210dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
