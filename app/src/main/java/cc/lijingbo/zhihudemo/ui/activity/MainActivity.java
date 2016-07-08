@@ -111,9 +111,13 @@ public class MainActivity extends AppCompatActivity
     mDrawerlayout.addDrawerListener(toggle);
   }
 
+  @Override protected void onStop() {
+    mPref.edit().putStringSet(Global.READER_ITEM,mReaderSet).commit();
+    super.onStop();
+  }
+
   @Override protected void onDestroy() {
     mBind.unbind();
-    mPref.edit().putStringSet(Global.READER_ITEM,mReaderSet).apply();
     super.onDestroy();
   }
 
