@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cc.lijingbo.zhihudemo.R;
-import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
+import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
 import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.presenter.IZhiHPresenter;
 import cc.lijingbo.zhihudemo.presenter.ZhiHPresenter;
@@ -45,14 +47,17 @@ public class MainActivity extends AppCompatActivity
   @BindView(R.id.nav_list_view) ListView mNavListView;
   private Unbinder mBind;
   private IZhiHPresenter iZhiHPresenter;
-  private List<LatestNewsBean.StoryBean> storiesList = new ArrayList<>();
-  private List<LatestNewsBean.TopStoryBean> topStoriesList = new ArrayList<>();
+  private List<ZhiHNewsBean.StoryBean> storiesList = new ArrayList<>();
+  private List<ZhiHNewsBean.TopStoryBean> topStoriesList = new ArrayList<>();
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
-  private Set<String> mReaderSet=new HashSet<>();
+  private Set<String> mReaderSet = new HashSet<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
   private int mClickPosition = 0;
   private SharedPreferences mPref;
+  private int mCurrentDate = 20130519;
+  private boolean isLoading = false;
+  private boolean isRefresh = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     edit.putInt(Global.DEVICE_HEIGTH, devicePx[1]);
     edit.commit();
     Set<String> readerItem = mPref.getStringSet(Global.READER_ITEM, null);
-    if (null!=readerItem){
+    if (null != readerItem) {
       mReaderSet.addAll(readerItem);
     }
   }
@@ -82,11 +87,33 @@ public class MainActivity extends AppCompatActivity
     mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
         android.R.color.holo_green_light, android.R.color.holo_orange_light,
         android.R.color.holo_red_light);
-    mAdapter = new ZhiHLatestAdapter(this, topStoriesList, storiesList,mReaderSet);
+    mAdapter = new ZhiHLatestAdapter(this, topStoriesList, storiesList, mReaderSet);
     mRecyclerView.setHasFixedSize(true);
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setAdapter(mAdapter);
+    mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+      }
+
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        if (lastVisibleItemPosition == mAdapter.getItemCount() - 1) {
+          Log.e("Demo", "加载更多");
+          if (!isLoading && !isRefresh) {
+            if (mCurrentDate != 20130519) {
+              iZhiHPresenter.getZhiHBefore(mCurrentDate);
+            } else {
+              Snackbar.make(mRecyclerView, "我的生日是2013年5月19日，所以以前的日报是空的", Snackbar.LENGTH_LONG)
+                  .show();
+            }
+          }
+        }
+      }
+    });
     mAdapter.setOnItemClickListener(new ZhiHLatestAdapter.OnItemClickListener() {
       @Override public void itemClick(View v, int id, int position) {
         mClickPosition = position;
@@ -95,7 +122,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
-
       }
     });
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);
@@ -112,7 +138,7 @@ public class MainActivity extends AppCompatActivity
   }
 
   @Override protected void onStop() {
-    mPref.edit().putStringSet(Global.READER_ITEM,mReaderSet).commit();
+    mPref.edit().putStringSet(Global.READER_ITEM, mReaderSet).commit();
     super.onStop();
   }
 
@@ -121,16 +147,20 @@ public class MainActivity extends AppCompatActivity
     super.onDestroy();
   }
 
+  @Override public void updateCurrentDate(int date) {
+    mCurrentDate = date;
+  }
+
   @Override public void updateAppBarTitle(String name) {
     mToolbar.setTitle(name);
   }
 
   @Override public void showProgressDialog() {
-    if (!mSwipeRefreshLayout.isRefreshing()) mSwipeRefreshLayout.setRefreshing(true);
+    if (isRefresh) mSwipeRefreshLayout.setRefreshing(true);
   }
 
-  @Override public void updateListData(List<LatestNewsBean.StoryBean> stories,
-      List<LatestNewsBean.TopStoryBean> topStories) {
+  @Override public void updateListData(List<ZhiHNewsBean.StoryBean> stories,
+      List<ZhiHNewsBean.TopStoryBean> topStories) {
     storiesList.clear();
     topStoriesList.clear();
     storiesList.addAll(stories);
@@ -145,16 +175,33 @@ public class MainActivity extends AppCompatActivity
     mNavListAdapter.notifyDataSetChanged();
   }
 
+  @Override public void loadMore(List<ZhiHNewsBean.StoryBean> stories) {
+    storiesList.addAll(stories);
+    mAdapter.notifyDataSetChanged();
+  }
+
   @Override public void hideProgressDialog() {
-    if (mSwipeRefreshLayout.isRefreshing()) {
+    if (isRefresh) {
       mSwipeRefreshLayout.setRefreshing(false);
+      isRefresh = false;
     }
   }
 
+  @Override public void stopLoadMoreStates() {
+    isLoading = false;
+  }
+
+  @Override public void startLoadMoreStates() {
+    isLoading = true;
+  }
+
   @Override public void onRefresh() {
-    iZhiHPresenter.getZhiHLatest();
-    getSlideThemes();
-    mClickPosition = 0;
+    if (!isRefresh) {
+      iZhiHPresenter.getZhiHLatest();
+      getSlideThemes();
+      mClickPosition = 0;
+      isRefresh = true;
+    }
   }
 
   public void getSlideThemes() {

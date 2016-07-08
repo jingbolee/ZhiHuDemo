@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import cc.lijingbo.zhihudemo.ZhiHuApp;
-import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
+import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
 import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.model.IZhiHRequest;
@@ -24,37 +24,37 @@ public class ZhiHPresenter implements IZhiHPresenter {
   Context mContext;
   IMainActivity iMainActivity;
   RecyclerView mView;
+  private SharedPreferences mPref;
 
   public ZhiHPresenter(IMainActivity iMainActivity, RecyclerView view) {
     this.iMainActivity = iMainActivity;
     mView = view;
     request = new ZhiHRequest();
     mContext = ZhiHuApp.getInstance();
+    mPref = mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
   }
 
   @Override public void getZhiHLatest() {
     iMainActivity.showProgressDialog();
-    Call<LatestNewsBean> call = request.getZhiHNews().getLatestNews("latest");
-    call.enqueue(new Callback<LatestNewsBean>() {
-      @Override
-      public void onResponse(Call<LatestNewsBean> call, Response<LatestNewsBean> response) {
+    Call<ZhiHNewsBean> call = request.getZhiHNews().getLatestNews("latest");
+    call.enqueue(new Callback<ZhiHNewsBean>() {
+      @Override public void onResponse(Call<ZhiHNewsBean> call, Response<ZhiHNewsBean> response) {
         if (response.isSuccessful()) {
-          LatestNewsBean body = response.body();
+          ZhiHNewsBean body = response.body();
           Snackbar.make(mView, "刷新成功", Snackbar.LENGTH_SHORT).show();
-          SharedPreferences sharedPreferences =
-              mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
-          sharedPreferences.edit().putString(Global.LATEST_JSON, new Gson().toJson(body)).commit();
+          mPref.edit().putString(Global.LATEST_JSON, new Gson().toJson(body)).commit();
           int date = body.getDate();
-          sharedPreferences.edit().putInt(Global.UPDATE_TIME, date).commit();
+          mPref.edit().putInt(Global.UPDATE_TIME, date).commit();
           iMainActivity.updateAppBarTitle("日期：" + date);
-          List<LatestNewsBean.StoryBean> stories = body.getStories();
-          List<LatestNewsBean.TopStoryBean> topStories = body.getTop_stories();
+          iMainActivity.updateCurrentDate(date);
+          List<ZhiHNewsBean.StoryBean> stories = body.getStories();
+          List<ZhiHNewsBean.TopStoryBean> topStories = body.getTop_stories();
           iMainActivity.updateListData(stories, topStories);
           iMainActivity.hideProgressDialog();
         }
       }
 
-      @Override public void onFailure(Call<LatestNewsBean> call, Throwable t) {
+      @Override public void onFailure(Call<ZhiHNewsBean> call, Throwable t) {
         Snackbar.make(mView, "网络异常", Snackbar.LENGTH_SHORT).show();
         iMainActivity.hideProgressDialog();
         getZhiHFromCache();
@@ -63,17 +63,50 @@ public class ZhiHPresenter implements IZhiHPresenter {
     });
   }
 
+  @Override public void getZhiHBefore(final int time) {
+    iMainActivity.startLoadMoreStates();
+    final Call<ZhiHNewsBean> beforeNews = request.getZhiHNews().getBeforeNews(time);
+    beforeNews.enqueue(new Callback<ZhiHNewsBean>() {
+      @Override public void onResponse(Call<ZhiHNewsBean> call, Response<ZhiHNewsBean> response) {
+        if (response.isSuccessful()) {
+          ZhiHNewsBean body = response.body();
+          int date = body.getDate();
+          mPref.edit().putString(String.valueOf(date), new Gson().toJson(body)).commit();
+          iMainActivity.updateCurrentDate(date);
+          List<ZhiHNewsBean.StoryBean> storyBeen = body.getStories();
+          iMainActivity.loadMore(storyBeen);
+          iMainActivity.stopLoadMoreStates();
+        }
+      }
+
+      @Override public void onFailure(Call<ZhiHNewsBean> call, Throwable t) {
+        iMainActivity.stopLoadMoreStates();
+        getZhiHFromCache(time);
+      }
+    });
+  }
+
   @Override public void getZhiHFromCache() {
-    SharedPreferences sharedPreferences =
-        mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
-    String body = sharedPreferences.getString(Global.LATEST_JSON, null);
-    if (null != body) {
-      LatestNewsBean bean = new Gson().fromJson(body, LatestNewsBean.class);
+    String json = mPref.getString(Global.LATEST_JSON, null);
+    if (null != json) {
+      ZhiHNewsBean bean = new Gson().fromJson(json, ZhiHNewsBean.class);
       int date = bean.getDate();
       iMainActivity.updateAppBarTitle("日期：" + date);
-      List<LatestNewsBean.StoryBean> stories = bean.getStories();
-      List<LatestNewsBean.TopStoryBean> topStories = bean.getTop_stories();
+      iMainActivity.updateCurrentDate(date);
+      List<ZhiHNewsBean.StoryBean> stories = bean.getStories();
+      List<ZhiHNewsBean.TopStoryBean> topStories = bean.getTop_stories();
       iMainActivity.updateListData(stories, topStories);
+    }
+  }
+
+  @Override public void getZhiHFromCache(int time) {
+    String json = mPref.getString(String.valueOf(time), null);
+    if (null != json) {
+      ZhiHNewsBean bean = new Gson().fromJson(json, ZhiHNewsBean.class);
+      int date = bean.getDate();
+      iMainActivity.updateCurrentDate(date);
+      List<ZhiHNewsBean.StoryBean> stories = bean.getStories();
+      iMainActivity.loadMore(stories);
     }
   }
 
@@ -103,5 +136,4 @@ public class ZhiHPresenter implements IZhiHPresenter {
       }
     });
   }
-
 }

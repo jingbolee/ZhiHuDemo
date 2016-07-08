@@ -13,7 +13,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.lijingbo.zhihudemo.R;
-import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
+import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
 import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import com.squareup.picasso.Picasso;
@@ -26,8 +26,8 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   private static final int TYPE_ITEM = 1;
   private static final int TYPE_DATE = 2;
   Context mContext;
-  List<LatestNewsBean.StoryBean> storyBeanList;
-  List<LatestNewsBean.TopStoryBean> topStoryBeanList;
+  List<ZhiHNewsBean.StoryBean> storyBeanList;
+  List<ZhiHNewsBean.TopStoryBean> topStoryBeanList;
   Set<String> mReaderSet;
   int mCurrentPoint = 0;
   private OnItemClickListener mListener;
@@ -36,8 +36,8 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     mListener = listener;
   }
 
-  public ZhiHLatestAdapter(Context context, List<LatestNewsBean.TopStoryBean> topStoryList,
-      List<LatestNewsBean.StoryBean> storyList,Set<String> set) {
+  public ZhiHLatestAdapter(Context context, List<ZhiHNewsBean.TopStoryBean> topStoryList,
+      List<ZhiHNewsBean.StoryBean> storyList,Set<String> set) {
     mContext = context;
     storyBeanList = storyList;
     topStoryBeanList = topStoryList;
@@ -63,7 +63,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
     if (holder instanceof ItemViewHolder) {
       ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-      final LatestNewsBean.StoryBean storyBean = storyBeanList.get(position - 2);
+      final ZhiHNewsBean.StoryBean storyBean = storyBeanList.get(position - 2);
       final int id = storyBean.getId();
       itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
@@ -145,6 +145,10 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     } else {
       return TYPE_ITEM;
     }
+  }
+
+  public int getRealCount(){
+    return storyBeanList.size() == 0 ? 0 : storyBeanList.size() + 2;
   }
 
   class ItemViewHolder extends RecyclerView.ViewHolder {

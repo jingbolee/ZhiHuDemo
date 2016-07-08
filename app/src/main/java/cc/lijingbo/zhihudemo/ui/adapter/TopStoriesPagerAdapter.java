@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import cc.lijingbo.zhihudemo.R;
-import cc.lijingbo.zhihudemo.bean.LatestNewsBean;
+import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
 import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class TopStoriesPagerAdapter extends PagerAdapter {
-  List<LatestNewsBean.TopStoryBean> topStoriesList;
+  List<ZhiHNewsBean.TopStoryBean> topStoriesList;
   Context mContext;
   int deviceWidth;
   int imageHeigth;
@@ -29,7 +29,7 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
   }
 
   public TopStoriesPagerAdapter(Context context,
-      List<LatestNewsBean.TopStoryBean> topStoryBeanList) {
+      List<ZhiHNewsBean.TopStoryBean> topStoryBeanList) {
     topStoriesList = topStoryBeanList;
     mContext = context;
     deviceWidth = mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE)
@@ -47,7 +47,7 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
 
   @Override public Object instantiateItem(ViewGroup container, int position) {
     View view = LayoutInflater.from(mContext).inflate(R.layout.viewpager_item, container, false);
-    final LatestNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
+    final ZhiHNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
     ImageView imageView = (ImageView) view;
     Picasso.with(mContext)
         .load(topStoryBean.getImage())

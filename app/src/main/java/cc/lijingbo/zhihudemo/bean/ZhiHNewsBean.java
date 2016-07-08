@@ -2,7 +2,7 @@ package cc.lijingbo.zhihudemo.bean;
 
 import java.util.List;
 
-public class LatestNewsBean {
+public class ZhiHNewsBean {
 
   private int date;
   private List<StoryBean> stories;
