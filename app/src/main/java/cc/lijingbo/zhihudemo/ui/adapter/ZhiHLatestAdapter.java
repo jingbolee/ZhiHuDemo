@@ -1,6 +1,7 @@
 package cc.lijingbo.zhihudemo.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import cc.lijingbo.zhihudemo.global.Global;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import com.squareup.picasso.Picasso;
 import java.util.List;
+import java.util.Set;
 
 public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private static final String TAG = "ZhiHLatestAdapter";
@@ -26,6 +28,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   Context mContext;
   List<LatestNewsBean.StoryBean> storyBeanList;
   List<LatestNewsBean.TopStoryBean> topStoryBeanList;
+  Set<String> mReaderSet;
   int mCurrentPoint = 0;
   private OnItemClickListener mListener;
 
@@ -34,10 +37,11 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   public ZhiHLatestAdapter(Context context, List<LatestNewsBean.TopStoryBean> topStoryList,
-      List<LatestNewsBean.StoryBean> storyList) {
+      List<LatestNewsBean.StoryBean> storyList,Set<String> set) {
     mContext = context;
     storyBeanList = storyList;
     topStoryBeanList = topStoryList;
+    mReaderSet = set;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,10 +64,11 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     if (holder instanceof ItemViewHolder) {
       ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
       final LatestNewsBean.StoryBean storyBean = storyBeanList.get(position - 2);
+      final int id = storyBean.getId();
       itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           if (mListener != null) {
-            mListener.itemClick(v,storyBean.getId(),position - 2);
+            mListener.itemClick(v, id, position - 2);
           }
         }
       });
@@ -72,6 +77,11 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             .load(storyBean.getImages()[0])
             .placeholder(R.drawable.noimage)
             .into(itemViewHolder.latestImage);
+      }
+      if (mReaderSet.contains(String.valueOf(id))) {
+        itemViewHolder.latestTitle.setTextColor(Color.GRAY);
+      } else {
+        itemViewHolder.latestTitle.setTextColor(Color.BLACK);
       }
       itemViewHolder.latestTitle.setText(storyBean.getTitle());
     }
@@ -108,7 +118,7 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
         pagerAdapter.setOnPagerClickListener(new TopStoriesPagerAdapter.OnPagerClickListener() {
           @Override public void onPagerClick(View v, int id) {
-            mListener.itemClick(v,id,0);
+            mListener.itemClick(v, id, 0);
           }
         });
       }
@@ -186,6 +196,6 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   public interface OnItemClickListener {
-    void itemClick(View v,int id,int position);
+    void itemClick(View v, int id, int position);
   }
 }

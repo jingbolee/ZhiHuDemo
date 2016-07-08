@@ -9,4 +9,5 @@ public class Global {
   public static final String UPDATE_TIME = "date";
   public static final String DEVICE_WIDTH = "device_width";
   public static final String DEVICE_HEIGTH = "device_heigth";
+  public static final String READER_ITEM = "readerItem";
 }

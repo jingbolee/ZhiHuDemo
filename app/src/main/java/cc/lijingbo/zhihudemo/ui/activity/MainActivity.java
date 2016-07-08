@@ -29,7 +29,9 @@ import cc.lijingbo.zhihudemo.ui.adapter.ZhiHLatestAdapter;
 import cc.lijingbo.zhihudemo.ui.adapter.ZhiHThemesAdapter;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
     implements IMainActivity, SwipeRefreshLayout.OnRefreshListener,
@@ -46,9 +48,11 @@ public class MainActivity extends AppCompatActivity
   private List<LatestNewsBean.StoryBean> storiesList = new ArrayList<>();
   private List<LatestNewsBean.TopStoryBean> topStoriesList = new ArrayList<>();
   private List<ThemesBean.Theme> mThemesList = new ArrayList<>();
+  private Set<String> mReaderSet=new HashSet<>();
   private ZhiHLatestAdapter mAdapter;
   private ZhiHThemesAdapter mNavListAdapter;
   private int mClickPosition = 0;
+  private SharedPreferences mPref;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,10 +66,15 @@ public class MainActivity extends AppCompatActivity
   private void initData() {
     iZhiHPresenter = new ZhiHPresenter(this, mRecyclerView);
     int[] devicePx = DensityUtil.getDevicePx(this);
-    SharedPreferences.Editor edit = getSharedPreferences(Global.SHAREP_NAME, MODE_PRIVATE).edit();
+    mPref = getSharedPreferences(Global.SHAREP_NAME, MODE_PRIVATE);
+    SharedPreferences.Editor edit = mPref.edit();
     edit.putInt(Global.DEVICE_WIDTH, devicePx[0]);
     edit.putInt(Global.DEVICE_HEIGTH, devicePx[1]);
     edit.commit();
+    Set<String> readerItem = mPref.getStringSet(Global.READER_ITEM, null);
+    if (null!=readerItem){
+      mReaderSet.addAll(readerItem);
+    }
   }
 
   private void initView() {
@@ -73,7 +82,7 @@ public class MainActivity extends AppCompatActivity
     mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
         android.R.color.holo_green_light, android.R.color.holo_orange_light,
         android.R.color.holo_red_light);
-    mAdapter = new ZhiHLatestAdapter(this, topStoriesList, storiesList);
+    mAdapter = new ZhiHLatestAdapter(this, topStoriesList, storiesList,mReaderSet);
     mRecyclerView.setHasFixedSize(true);
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,9 +90,12 @@ public class MainActivity extends AppCompatActivity
     mAdapter.setOnItemClickListener(new ZhiHLatestAdapter.OnItemClickListener() {
       @Override public void itemClick(View v, int id, int position) {
         mClickPosition = position;
+        mReaderSet.add(String.valueOf(id));
+        mAdapter.notifyDataSetChanged();
         Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
+
       }
     });
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);
@@ -101,6 +113,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override protected void onDestroy() {
     mBind.unbind();
+    mPref.edit().putStringSet(Global.READER_ITEM,mReaderSet).apply();
     super.onDestroy();
   }
 
