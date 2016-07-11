@@ -6,7 +6,16 @@ public class ZhiHContentBean {
   private String title;
   private String image;
   private String share_url;
+  private String image_source;
   private int id;
+
+  public String getImage_source() {
+    return image_source;
+  }
+
+  public void setImage_source(String image_source) {
+    this.image_source = image_source;
+  }
 
   public String getBody() {
     return body;

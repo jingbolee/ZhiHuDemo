@@ -10,8 +10,8 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,12 +30,12 @@ import java.io.IOException;
 public class ContentActivity extends AppCompatActivity implements iContentActivity {
   private Unbinder mBind;
   IZhiHContentPresenter presenter;
-  //@BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
   @BindView(R.id.toolbar) Toolbar mToolbar;
   @BindView(R.id.content_image) ImageView contentImage;
   @BindView(R.id.webview) WebView webview;
   @BindView(R.id.content_text) TextView contentText;
-  @BindView(R.id.frame_text_background) FrameLayout frameTextBackGround;
+  @BindView(R.id.text_copyright) TextView copyRigthText;
+  @BindView(R.id.frame_text_background) RelativeLayout frameTextBackGround;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -86,6 +86,7 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
         .centerCrop()
         .into(contentImage);
     contentText.setText(bean.getTitle());
+    copyRigthText.setText(bean.getImage_source());
     //api返回的不是一个标准的html格式，需要拼接
     String content =
         "<html><head><meta name=\"viewport\" content=\"target-densitydpi=device-dpi,width=device-width,initial-scale=1.0\"/>";
