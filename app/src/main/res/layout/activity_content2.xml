@@ -48,7 +48,6 @@
             android:id="@+id/content_image"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:background="@drawable/bg"
             android:scaleType="centerCrop"
             />
         <RelativeLayout

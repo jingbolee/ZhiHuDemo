@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
+        overridePendingTransition(R.anim.main_enter_anim,R.anim.main_exit_anim);
       }
     });
     mNavListAdapter = new ZhiHThemesAdapter(this, mThemesList);

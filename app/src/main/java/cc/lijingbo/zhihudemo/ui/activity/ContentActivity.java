@@ -55,6 +55,7 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         finish();
+        overridePendingTransition(R.anim.content_enter_anim,R.anim.content_exit_anim);
       }
     });
   }
