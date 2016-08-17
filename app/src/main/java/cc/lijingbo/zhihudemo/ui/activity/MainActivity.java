@@ -13,11 +13,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition == mAdapter.getItemCount() - 1) {
-                    Log.e("Demo", "加载更多");
+                    KLog.e("加载更多");
                     if (!isLoading && !isRefresh) {
                         if (mCurrentDate != 20130519) {
                             iZhiHPresenter.getZhiHBefore(mCurrentDate);

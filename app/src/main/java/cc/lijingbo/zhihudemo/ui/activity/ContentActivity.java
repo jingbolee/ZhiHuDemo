@@ -3,6 +3,7 @@ package cc.lijingbo.zhihudemo.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +47,8 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     TextView copyRigthText;
     @BindView(R.id.frame_text_background)
     RelativeLayout frameTextBackGround;
+    @BindView(R.id.nsv)
+    NestedScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +88,18 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
 
     @Override
     public void showFrameTextBackGround() {
-        if (frameTextBackGround != null) {
-            if (View.VISIBLE != frameTextBackGround.getVisibility()) {
-                frameTextBackGround.setVisibility(View.VISIBLE);
+        if (scrollView != null) {
+            if (View.VISIBLE != scrollView.getVisibility()) {
+                scrollView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     @Override
     public void hideFrameTextBackGround() {
-        if (frameTextBackGround != null) {
-            if (View.INVISIBLE != frameTextBackGround.getVisibility()) {
-                frameTextBackGround.setVisibility(View.INVISIBLE);
+        if (scrollView != null) {
+            if (View.INVISIBLE != scrollView.getVisibility()) {
+                scrollView.setVisibility(View.INVISIBLE);
             }
         }
     }

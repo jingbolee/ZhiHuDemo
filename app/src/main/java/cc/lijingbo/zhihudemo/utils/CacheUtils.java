@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.StatFs;
 import android.support.v4.util.LruCache;
 import android.text.format.Formatter;
-import android.util.Log;
 
 import com.socks.library.KLog;
 
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+
 import libcore.io.DiskLruCache;
 
 public class CacheUtils {
@@ -110,7 +110,7 @@ public class CacheUtils {
   public String loadData(String key) {
     String data = loadDataFromMemCache(key);
     if (data != null) {
-      Log.e("Demo", "loadDataFromMemCache,id:" + key);
+      KLog.e("loadDataFromMemCache,id:" + key);
       return data;
     }
     try {
