@@ -14,7 +14,7 @@ import java.util.List;
 import cc.lijingbo.zhihudemo.ZhiHuApp;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
 import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
-import cc.lijingbo.zhihudemo.global.Global;
+import cc.lijingbo.zhihudemo.global.Constants;
 import cc.lijingbo.zhihudemo.model.IZhiHRequest;
 import cc.lijingbo.zhihudemo.model.ZhiHRequest;
 import cc.lijingbo.zhihudemo.ui.activity.IMainActivity;
@@ -30,13 +30,15 @@ public class ZhiHPresenter implements IZhiHPresenter {
   IMainActivity iMainActivity;
   RecyclerView mView;
   private SharedPreferences mPref;
+  CacheUtils cacheUtils;
 
   public ZhiHPresenter(IMainActivity iMainActivity, RecyclerView view) {
     this.iMainActivity = iMainActivity;
     mView = view;
     request = new ZhiHRequest();
     mContext = ZhiHuApp.getInstance();
-    mPref = mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE);
+    cacheUtils = CacheUtils.build(mContext);
+    mPref = mContext.getSharedPreferences(Constants.SHAREP_NAME, Context.MODE_PRIVATE);
   }
 
   @Override public void getZhiHLatest() {
@@ -47,10 +49,14 @@ public class ZhiHPresenter implements IZhiHPresenter {
         if (response.isSuccessful()) {
           ZhiHNewsBean body = response.body();
           Snackbar.make(mView, "刷新成功", Snackbar.LENGTH_SHORT).show();
-          mPref.edit().putString(Global.LATEST_JSON, new Gson().toJson(body)).commit();
-
+//          mPref.edit().putString(Constants.LATEST_JSON, new Gson().toJson(body)).commit();
+          try {
+            cacheUtils.addData(Constants.LATEST_JSON,new Gson().toJson(body));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
           int date = body.getDate();
-          mPref.edit().putInt(Global.UPDATE_TIME, date).commit();
+          mPref.edit().putInt(Constants.UPDATE_TIME, date).commit();
           iMainActivity.updateAppBarTitle("日期：" + date);
           iMainActivity.updateCurrentDate(date);
           List<ZhiHNewsBean.StoryBean> stories = body.getStories();
@@ -71,7 +77,6 @@ public class ZhiHPresenter implements IZhiHPresenter {
 
   @Override public void getZhiHBefore(final int time) {
     iMainActivity.startLoadMoreStates();
-    final CacheUtils cacheUtils = CacheUtils.build(mContext);
     String loadData = cacheUtils.loadData(String.valueOf(time));
     if (loadData != null) {
       ZhiHNewsBean bean = new Gson().fromJson(loadData, ZhiHNewsBean.class);
@@ -109,7 +114,8 @@ public class ZhiHPresenter implements IZhiHPresenter {
   }
 
   @Override public void getZhiHFromCache() {
-    String json = mPref.getString(Global.LATEST_JSON, null);
+//    String json = mPref.getString(Constants.LATEST_JSON, null);
+    String json = cacheUtils.loadData(Constants.LATEST_JSON);
     if (null != json) {
       ZhiHNewsBean bean = new Gson().fromJson(json, ZhiHNewsBean.class);
       int date = bean.getDate();
@@ -134,7 +140,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
 
   @Override public void getThemes() {
     final CacheUtils cacheUtils = CacheUtils.build(mContext);
-    String loadData = cacheUtils.loadData(Global.THEMES);
+    String loadData = cacheUtils.loadData(Constants.THEMES);
     if (loadData != null) {
       ThemesBean themesBean = new Gson().fromJson(loadData, ThemesBean.class);
       List<ThemesBean.Theme> others = themesBean.getOthers();
@@ -148,7 +154,7 @@ public class ZhiHPresenter implements IZhiHPresenter {
         if (response.isSuccessful()) {
           ThemesBean body = response.body();
           try {
-            String data = cacheUtils.addData(Global.THEMES, new Gson().toJson(body, ThemesBean.class));
+            String data = cacheUtils.addData(Constants.THEMES, new Gson().toJson(body, ThemesBean.class));
             ThemesBean themesBean = new Gson().fromJson(data, ThemesBean.class);
             List<ThemesBean.Theme> others = themesBean.getOthers();
             iMainActivity.updateThemesData(others);

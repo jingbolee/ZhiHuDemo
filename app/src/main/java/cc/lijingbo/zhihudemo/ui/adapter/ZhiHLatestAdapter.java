@@ -10,15 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.lijingbo.zhihudemo.R;
 import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
-import cc.lijingbo.zhihudemo.global.Global;
+import cc.lijingbo.zhihudemo.global.Constants;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
-import com.squareup.picasso.Picasso;
-import java.util.List;
-import java.util.Set;
 
 public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private static final String TAG = "ZhiHLatestAdapter";
@@ -125,8 +128,8 @@ public class ZhiHLatestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
     if (holder instanceof DateViewHolder) {
       DateViewHolder dateViewHolder = (DateViewHolder) holder;
-      int date = mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE)
-          .getInt(Global.UPDATE_TIME, 0);
+      int date = mContext.getSharedPreferences(Constants.SHAREP_NAME, Context.MODE_PRIVATE)
+          .getInt(Constants.UPDATE_TIME, 0);
       if (date > 0) {
         dateViewHolder.textRecyclerViewDate.setText("日期:" + date);
       }

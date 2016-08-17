@@ -18,15 +18,16 @@ public class ZhiHContentPresenter implements IZhiHContentPresenter {
 
   IZhiHRequest request;
   iContentActivity mActivity;
-
+  CacheUtils cacheUtils;
   public ZhiHContentPresenter(iContentActivity activity) {
     request = new ZhiHRequest();
     mActivity = activity;
+    cacheUtils = CacheUtils.build(ZhiHuApp.getInstance());
   }
 
   @Override public void getZhiHContent(final int id) {
-    final CacheUtils instance = CacheUtils.build(ZhiHuApp.getInstance());
-    String data = instance.loadData(String.valueOf(id));
+
+    String data = cacheUtils.loadData(String.valueOf(id));
 
     if (data != null) {
       ZhiHContentBean bean = new Gson().fromJson(data, ZhiHContentBean.class);
@@ -41,7 +42,7 @@ public class ZhiHContentPresenter implements IZhiHContentPresenter {
         if (response.isSuccessful()) {
           ZhiHContentBean body = response.body();
           try {
-            String json = instance.addData(String.valueOf(id), new Gson().toJson(body));
+            String json = cacheUtils.addData(String.valueOf(id), new Gson().toJson(body));
             ZhiHContentBean zhiHContentBean = new Gson().fromJson(json, ZhiHContentBean.class);
             mActivity.showFrameTextBackGround();
             mActivity.showContent(zhiHContentBean);

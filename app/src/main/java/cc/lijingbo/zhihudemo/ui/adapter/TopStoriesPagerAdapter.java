@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import cc.lijingbo.zhihudemo.R;
 import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
-import cc.lijingbo.zhihudemo.global.Global;
+import cc.lijingbo.zhihudemo.global.Constants;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import com.squareup.picasso.Picasso;
 import java.util.List;
@@ -32,8 +32,8 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
       List<ZhiHNewsBean.TopStoryBean> topStoryBeanList) {
     topStoriesList = topStoryBeanList;
     mContext = context;
-    deviceWidth = mContext.getSharedPreferences(Global.SHAREP_NAME, Context.MODE_PRIVATE)
-        .getInt(Global.DEVICE_WIDTH, 0);
+    deviceWidth = mContext.getSharedPreferences(Constants.SHAREP_NAME, Context.MODE_PRIVATE)
+        .getInt(Constants.DEVICE_WIDTH, 0);
     imageHeigth = DensityUtil.dip2px(mContext, 200);
   }
 

@@ -30,7 +30,7 @@ import butterknife.Unbinder;
 import cc.lijingbo.zhihudemo.R;
 import cc.lijingbo.zhihudemo.bean.ThemesBean;
 import cc.lijingbo.zhihudemo.bean.ZhiHNewsBean;
-import cc.lijingbo.zhihudemo.global.Global;
+import cc.lijingbo.zhihudemo.global.Constants;
 import cc.lijingbo.zhihudemo.presenter.IZhiHPresenter;
 import cc.lijingbo.zhihudemo.presenter.ZhiHPresenter;
 import cc.lijingbo.zhihudemo.ui.adapter.ZhiHLatestAdapter;
@@ -80,12 +80,12 @@ public class MainActivity extends AppCompatActivity
     private void initData() {
         iZhiHPresenter = new ZhiHPresenter(this, mRecyclerView);
         int[] devicePx = DensityUtil.getDevicePx(this);
-        mPref = getSharedPreferences(Global.SHAREP_NAME, MODE_PRIVATE);
+        mPref = getSharedPreferences(Constants.SHAREP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor edit = mPref.edit();
-        edit.putInt(Global.DEVICE_WIDTH, devicePx[0]);
-        edit.putInt(Global.DEVICE_HEIGTH, devicePx[1]);
+        edit.putInt(Constants.DEVICE_WIDTH, devicePx[0]);
+        edit.putInt(Constants.DEVICE_HEIGTH, devicePx[1]);
         edit.commit();
-        Set<String> readerItem = mPref.getStringSet(Global.READER_ITEM, null);
+        Set<String> readerItem = mPref.getStringSet(Constants.READER_ITEM, null);
         if (null != readerItem) {
             mReaderSet.addAll(readerItem);
         }
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        mPref.edit().putStringSet(Global.READER_ITEM, mReaderSet).commit();
+        mPref.edit().putStringSet(Constants.READER_ITEM, mReaderSet).commit();
         super.onStop();
     }
 

@@ -1,7 +1,7 @@
 package cc.lijingbo.zhihudemo.global;
 
-public class Global {
-  private static final String TAG = "Global";
+public class Constants {
+  private static final String TAG = "Constants";
 
   public static final String SHAREP_NAME = "ZhiH";
   public static final String LATEST_JSON = "latest";
