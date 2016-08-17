@@ -1,6 +1,8 @@
 package cc.lijingbo.zhihudemo.model;
 
 import cc.lijingbo.zhihudemo.model.api.ZhiHApi;
+import cc.lijingbo.zhihudemo.utils.OkHttpUtils;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -11,11 +13,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ZhiHRequest implements IZhiHRequest {
 
   @Override public ZhiHApi getZhiHNews() {
-    ZhiHApi zhiHApi = new Retrofit.Builder().baseUrl("http://news-at.zhihu.com")
+    OkHttpClient okHttpClient = OkHttpUtils.getInstance();
+    return  new Retrofit.Builder().baseUrl("http://news-at.zhihu.com")
+        .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ZhiHApi.class);
-
-    return zhiHApi;
   }
 }

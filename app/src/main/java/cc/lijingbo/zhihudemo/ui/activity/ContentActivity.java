@@ -13,6 +13,11 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -24,8 +29,6 @@ import cc.lijingbo.zhihudemo.presenter.ZhiHContentPresenter;
 import cc.lijingbo.zhihudemo.utils.ConverterString;
 import cc.lijingbo.zhihudemo.utils.DensityUtil;
 import cc.lijingbo.zhihudemo.utils.HtmlSanitizer;
-import com.squareup.picasso.Picasso;
-import java.io.IOException;
 
 public class ContentActivity extends AppCompatActivity implements iContentActivity {
   private Unbinder mBind;
@@ -55,7 +58,7 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         finish();
-        overridePendingTransition(R.anim.content_enter_anim,R.anim.content_exit_anim);
+        overridePendingTransition(R.anim.content_enter_anim, R.anim.content_exit_anim);
       }
     });
   }
@@ -66,14 +69,18 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
   }
 
   @Override public void showFrameTextBackGround() {
-    if (View.VISIBLE != frameTextBackGround.getVisibility()) {
-      frameTextBackGround.setVisibility(View.VISIBLE);
+    if (frameTextBackGround != null) {
+      if (View.VISIBLE != frameTextBackGround.getVisibility()) {
+        frameTextBackGround.setVisibility(View.VISIBLE);
+      }
     }
   }
 
   @Override public void hideFrameTextBackGround() {
-    if (View.INVISIBLE != frameTextBackGround.getVisibility()) {
-      frameTextBackGround.setVisibility(View.INVISIBLE);
+    if (frameTextBackGround != null) {
+      if (View.INVISIBLE != frameTextBackGround.getVisibility()) {
+        frameTextBackGround.setVisibility(View.INVISIBLE);
+      }
     }
   }
 
