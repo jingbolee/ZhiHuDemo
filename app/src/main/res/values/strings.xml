@@ -6,4 +6,6 @@
   <string name="nav_list_item_text">日常心理学</string>
   <string name="nav_menu_list_home_text">首页</string>
   <string name="text_recyclerview_date">今日热闻</string>
+  <string name="night_pattern">夜间模式</string>
+  <string name="setting_choose">设置选项</string>
 </resources>

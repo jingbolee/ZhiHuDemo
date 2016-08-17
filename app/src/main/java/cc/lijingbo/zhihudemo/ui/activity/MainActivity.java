@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(mToolbar);
+
         mBind = ButterKnife.bind(this);
         initData();
         initView();
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initView() {
+        mToolbar.inflateMenu(R.menu.zhihu_toolbar_menu);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light,
