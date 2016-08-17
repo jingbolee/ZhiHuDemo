@@ -76,6 +76,12 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.content_enter_anim, R.anim.content_exit_anim);
+    }
+
+    @Override
     protected void onDestroy() {
         mBind.unbind();
         if (webview != null) {
@@ -146,6 +152,8 @@ public class ContentActivity extends AppCompatActivity implements iContentActivi
 
         webview.loadDataWithBaseURL("http://", sanitizedContent, "text/html", "UTF-8", null);
     }
+
+
 
 
 }
