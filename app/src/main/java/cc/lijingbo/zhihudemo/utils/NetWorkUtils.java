@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetWorkUtils {
+
     private static final String TAG = "NetWorkUtils";
 
     //判断是否有网络
@@ -13,7 +14,7 @@ public class NetWorkUtils {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null){
+        if (networkInfo != null) {
             isNetwork = networkInfo.isConnectedOrConnecting();
         }
         return isNetwork;

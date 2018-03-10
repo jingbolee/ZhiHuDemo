@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cc.lijingbo.zhihudemo">
+  package="cc.lijingbo.zhihudemo">
 
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <application
-      android:name=".ZhiHuApp"
-      android:allowBackup="true"
-      android:fullBackupContent="true"
-      android:icon="@drawable/ic_launcher"
-      android:label="@string/app_name"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+    android:allowBackup="true"
+    android:fullBackupContent="true"
+    android:icon="@drawable/ic_launcher"
+    android:label="@string/app_name"
+    android:name=".ZhiHuApp"
+    android:supportsRtl="true"
+    android:resizeableActivity="true"
+    android:theme="@style/AppTheme">
     <activity
-        android:name=".ui.activity.MainActivity"
-        android:screenOrientation="portrait">
+      android:name=".ui.activity.MainActivity"
+      android:screenOrientation="portrait">
       <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER"/>
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
     <activity
-        android:name=".ui.activity.ContentActivity"
-        android:screenOrientation="portrait"
-        android:parentActivityName=".ui.activity.MainActivity"
-        >
+      android:name=".ui.activity.ContentActivity"
+      android:parentActivityName=".ui.activity.MainActivity"
+      android:screenOrientation="portrait">
       <meta-data
-          android:name="android.support.PARENT_ACTIVITY"
-          android:value=".ui.activity.MainActivity"></meta-data>
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".ui.activity.MainActivity"/>
     </activity>
   </application>
 

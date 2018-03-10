@@ -8,6 +8,7 @@ import org.htmlcleaner.SimpleHtmlSerializer;
 import org.htmlcleaner.TagNode;
 
 public class HtmlSanitizer {
+
     private static final HtmlCleaner HTML_CLEANER;
     private static final HtmlSerializer HTML_SERIALIZER;
 

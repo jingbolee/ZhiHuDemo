@@ -14,56 +14,63 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class TopStoriesPagerAdapter extends PagerAdapter {
-  List<ZhiHNewsBean.TopStoryBean> topStoriesList;
-  Context mContext;
-  int deviceWidth;
-  int imageHeigth;
-  OnPagerClickListener mListener;
 
-  public void setOnPagerClickListener(OnPagerClickListener listener) {
-    mListener = listener;
-  }
+    List<ZhiHNewsBean.TopStoryBean> topStoriesList;
+    Context mContext;
+    int deviceWidth;
+    int imageHeigth;
+    OnPagerClickListener mListener;
 
-  public interface OnPagerClickListener {
-    void onPagerClick(View v,int id);
-  }
+    public void setOnPagerClickListener(OnPagerClickListener listener) {
+        mListener = listener;
+    }
 
-  public TopStoriesPagerAdapter(Context context,
-      List<ZhiHNewsBean.TopStoryBean> topStoryBeanList) {
-    topStoriesList = topStoryBeanList;
-    mContext = context;
-    deviceWidth = mContext.getSharedPreferences(Constants.SHAREP_NAME, Context.MODE_PRIVATE)
-        .getInt(Constants.DEVICE_WIDTH, 0);
-    imageHeigth = DensityUtil.dip2px(mContext, 200);
-  }
+    public interface OnPagerClickListener {
 
-  @Override public int getCount() {
-    return topStoriesList.size();
-  }
+        void onPagerClick(View v, int id);
+    }
 
-  @Override public boolean isViewFromObject(View view, Object object) {
-    return view == object;
-  }
+    public TopStoriesPagerAdapter(Context context,
+            List<ZhiHNewsBean.TopStoryBean> topStoryBeanList) {
+        topStoriesList = topStoryBeanList;
+        mContext = context;
+        deviceWidth = mContext.getSharedPreferences(Constants.SHAREP_NAME, Context.MODE_PRIVATE)
+                .getInt(Constants.DEVICE_WIDTH, 0);
+        imageHeigth = DensityUtil.dip2px(mContext, 200);
+    }
 
-  @Override public Object instantiateItem(ViewGroup container, int position) {
-    View view = LayoutInflater.from(mContext).inflate(R.layout.viewpager_item, container, false);
-    final ZhiHNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
-    ImageView imageView = (ImageView) view;
-    Picasso.with(mContext)
-        .load(topStoryBean.getImage())
-        .resize(deviceWidth, imageHeigth)
-        .centerCrop()
-        .into(imageView);
-    container.addView(view);
-    view.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mListener.onPagerClick(v,topStoryBean.getId());
-      }
-    });
-    return view;
-  }
+    @Override
+    public int getCount() {
+        return topStoriesList.size();
+    }
 
-  @Override public void destroyItem(ViewGroup container, int position, Object object) {
-    container.removeView((View) object);
-  }
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.viewpager_item, container, false);
+        final ZhiHNewsBean.TopStoryBean topStoryBean = topStoriesList.get(position);
+        ImageView imageView = (ImageView) view;
+        Picasso.with(mContext)
+                .load(topStoryBean.getImage())
+                .resize(deviceWidth, imageHeigth)
+                .centerCrop()
+                .into(imageView);
+        container.addView(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onPagerClick(v, topStoryBean.getId());
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+    }
 }

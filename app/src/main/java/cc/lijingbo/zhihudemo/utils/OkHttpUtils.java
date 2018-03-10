@@ -11,25 +11,26 @@ import okhttp3.OkHttpClient;
  * @Date: 2016-07-12 20:45
  */
 public class OkHttpUtils {
-  private static final String TAG = "OkHttpUtils";
 
-  static volatile OkHttpClient singleton = null;
-  static  File cacheFile;
-  static Cache cache;
+    private static final String TAG = "OkHttpUtils";
 
-  static {
-    cacheFile = new File(ZhiHuApp.getInstance().getCacheDir()+ File.separator+"ZhiHLatest");
-    cache = new Cache(cacheFile,50 * 1024 * 1024);
-  }
+    static volatile OkHttpClient singleton = null;
+    static File cacheFile;
+    static Cache cache;
 
-  public static OkHttpClient getInstance() {
-    if (singleton == null) {
-      synchronized (OkHttpUtils.class) {
-        if (singleton == null) {
-          singleton = new OkHttpClient.Builder().cache(cache).build();
-        }
-      }
+    static {
+        cacheFile = new File(ZhiHuApp.getInstance().getCacheDir() + File.separator + "ZhiHLatest");
+        cache = new Cache(cacheFile, 50 * 1024 * 1024);
     }
-    return singleton;
-  }
+
+    public static OkHttpClient getInstance() {
+        if (singleton == null) {
+            synchronized (OkHttpUtils.class) {
+                if (singleton == null) {
+                    singleton = new OkHttpClient.Builder().cache(cache).build();
+                }
+            }
+        }
+        return singleton;
+    }
 }

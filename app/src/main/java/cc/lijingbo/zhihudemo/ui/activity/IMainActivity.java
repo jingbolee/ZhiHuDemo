@@ -5,22 +5,23 @@ import cc.lijingbo.zhihudemo.bean.ThemesBean;
 import java.util.List;
 
 public interface IMainActivity {
-  void updateCurrentDate(int date);
 
-  void updateAppBarTitle(String name);
+    void updateCurrentDate(int date);
 
-  void showProgressDialog();
+    void updateAppBarTitle(String name);
 
-  void hideProgressDialog();
+    void showProgressDialog();
 
-  void stopLoadMoreStates();
+    void hideProgressDialog();
 
-  void startLoadMoreStates();
+    void stopLoadMoreStates();
 
-  void updateListData(List<ZhiHNewsBean.StoryBean> stories,
-      List<ZhiHNewsBean.TopStoryBean> topStories);
+    void startLoadMoreStates();
 
-  void updateThemesData(List<ThemesBean.Theme> list);
+    void updateListData(List<ZhiHNewsBean.StoryBean> stories,
+            List<ZhiHNewsBean.TopStoryBean> topStories);
 
-  void loadMore(List<ZhiHNewsBean.StoryBean> stories);
+    void updateThemesData(List<ThemesBean.Theme> list);
+
+    void loadMore(List<ZhiHNewsBean.StoryBean> stories);
 }
